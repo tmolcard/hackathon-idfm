@@ -14,3 +14,4 @@ def itineraire_parking_velo(departure_address: str, arrival_address: str) -> dic
 
 if __name__=="__main__":
     i = itineraire_parking_velo("34 avenue de l'opera", "62 Rue Jean-Jacques Rousseau")
+    print(i.get("itinerary_marche"))

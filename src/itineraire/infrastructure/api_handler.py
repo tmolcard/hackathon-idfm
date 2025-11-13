@@ -38,7 +38,19 @@ class ApiHandler(SourceHandler):
             'to': f"{arrival_coordinates.x};{arrival_coordinates.y}",
         }
         r = self.session.get(f"{self.url_prim}/journeys", params=params)
-        return r.json()
+        list_journeys = r.json().get("journeys")
+        
+        if len(list_journeys) == 1:
+            return list_journeys[0]
+        
+        for journey in list_journeys:
+            if journey.get("type") == "non_pt_walk":
+                itinerary_marche = journey
+                unicite += 1
+        if unicite > 1:
+            print("Attention, il y a plus d'un itinéraire de marche trouvé")
+            return {}
+        return itinerary_marche
     
     def get_itinerary_velo(
             self,

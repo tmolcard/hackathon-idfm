@@ -15,6 +15,8 @@ def calcul_itineraire_velo(source_handler: SourceHandler, departure_name: str, a
 
     itinerary_velo = source_handler.get_itinerary_velo(departure_coordinates, parking_coordinates)
     itinerary_marche = source_handler.get_itinerary_marche(parking_coordinates, arrival_coordinates)
-
-    return itinerary_velo
+    return {
+        "itinerary_velo": itinerary_velo, 
+        "itinerary_marche": itinerary_marche
+    }
     
