@@ -9,6 +9,7 @@ import streamlit as st
 from streamlit_searchbox import st_searchbox  # type: ignore
 
 from src.parking_velo.config.filters import ParkingVeloFilters
+from src.parking_velo.domain.apps.get_parking_velo import get_parking_velo
 
 from .constants import PARIS_CENTER, MAP_STYLES
 from .styles import EXPANDER_CSS
@@ -81,6 +82,16 @@ def create_sidebar(gmaps):
             get_forecast,
             parking_filter,
         )
+
+
+@st.cache_data(show_spinner=False)
+def _get_parking_count(parking_filter: ParkingVeloFilters) -> int:
+    """Renvoie le nombre de parkings pour un filtre donné."""
+    try:
+        parking_data = get_parking_velo(filter=parking_filter)
+        return int(parking_data.shape[0])
+    except Exception:
+        return 0
 
 
 def _create_address_inputs(gmaps):
@@ -192,6 +203,9 @@ def _create_advanced_options():
             help="Sélectionne le type d'abri vélo privilégié pour la recherche.",
         )
         st.session_state.parking_filter = parking_filter
+
+        parking_count = _get_parking_count(parking_filter)
+        st.caption(f"✅ {parking_count} parkings vélo chargés")
 
         get_forecast = st.checkbox(
             "Afficher les prévisions météo du trajet",
